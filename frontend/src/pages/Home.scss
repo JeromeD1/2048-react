@@ -1,11 +1,18 @@
 .main-home {
   width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 
   .game-container {
     margin-left: auto;
     margin-right: auto;
-    margin-top: 200px;
+    // margin-top: 200px;
     width: 400px;
+    box-sizing: border-box;
+
 
     .section-2048-container {
       display: grid;
@@ -21,7 +28,7 @@
         align-items: center;
 
         p {
-          font-size: 1rem;
+          font-size: 3rem;
         }
       }
     }
