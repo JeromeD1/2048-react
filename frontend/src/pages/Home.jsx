@@ -4,6 +4,7 @@ import "./Home.scss"
 
 export default function Home() {
   const [grid2048, setGrid2048] = useState([])
+  const [score, setScore] = useState(0)
 
   const createGrid = () => {
     const newgrid = []
@@ -42,7 +43,7 @@ export default function Home() {
     }
   }
 
-  const swipeLeft = (myGrid, count) => {
+  const swipeLeft = (myGrid, count, newScore) => {
     // let newGrid = grid2048
     let newGrid = myGrid
 
@@ -91,6 +92,7 @@ export default function Home() {
                     : cellule // les autres cellules ne bougent pas
               )
 
+              newScore += cell.value * 2
               changeGrid = true // il y a eu une modification donc changeGrid passe à true
             }
           } else if (cell.value === 0) {
@@ -132,7 +134,6 @@ export default function Home() {
 
     // console.log("allOnLeft",allOnLeft);
     // console.log("changeGrid", changeGrid);
-
     // si allOnLeft = true et que changeGrid = false on rajoute un chiffre
     if (allOnLeft === true && changeGrid === false) {
       if (count > 0) {
@@ -147,14 +148,16 @@ export default function Home() {
         newGrid = newGrid.map((item) => ({ ...item, mergeable: true }))
       }
     } else {
-      return swipeLeft(newGrid, count + 1)
+      return swipeLeft(newGrid, count + 1, newScore)
     }
 
     setGrid2048(newGrid)
+
+    setScore(score + newScore)
   }
   // }
 
-  const swipeTop = (myGrid, count) => {
+  const swipeTop = (myGrid, count, newScore) => {
     // let newGrid = grid2048
     let newGrid = myGrid
 
@@ -203,6 +206,7 @@ export default function Home() {
                     : cellule // les autres cellules ne bougent pas
               )
 
+              newScore += cell.value * 2
               changeGrid = true // il y a eu une modification donc changeGrid passe à true
             }
           } else if (cell.value === 0) {
@@ -259,13 +263,14 @@ export default function Home() {
         newGrid = newGrid.map((item) => ({ ...item, mergeable: true }))
       }
     } else {
-      return swipeTop(newGrid, count + 1)
+      return swipeTop(newGrid, count + 1, newScore)
     }
 
     setGrid2048(newGrid)
+    setScore(score + newScore)
   }
 
-  const swipeRight = (myGrid, count) => {
+  const swipeRight = (myGrid, count, newScore) => {
     // let newGrid = grid2048
     let newGrid = myGrid
 
@@ -314,6 +319,7 @@ export default function Home() {
                     : cellule // les autres cellules ne bougent pas
               )
 
+              newScore += cell.value * 2
               changeGrid = true // il y a eu une modification donc changeGrid passe à true
             }
           } else if (cell.value === 0) {
@@ -370,13 +376,14 @@ export default function Home() {
         newGrid = newGrid.map((item) => ({ ...item, mergeable: true }))
       }
     } else {
-      return swipeRight(newGrid, count + 1)
+      return swipeRight(newGrid, count + 1, newScore)
     }
 
     setGrid2048(newGrid)
+    setScore(score + newScore)
   }
 
-  const swipeBottom = (myGrid, count) => {
+  const swipeBottom = (myGrid, count, newScore) => {
     // let newGrid = grid2048
     let newGrid = myGrid
 
@@ -425,6 +432,7 @@ export default function Home() {
                     : cellule // les autres cellules ne bougent pas
               )
 
+              newScore += cell.value * 2
               changeGrid = true // il y a eu une modification donc changeGrid passe à true
             }
           } else if (cell.value === 0) {
@@ -481,10 +489,11 @@ export default function Home() {
         newGrid = newGrid.map((item) => ({ ...item, mergeable: true }))
       }
     } else {
-      return swipeBottom(newGrid, count + 1)
+      return swipeBottom(newGrid, count + 1, newScore)
     }
 
     setGrid2048(newGrid)
+    setScore(score + newScore)
   }
 
   // Créer une fonction qui gère l'événement onKeyDown
@@ -495,16 +504,16 @@ export default function Home() {
     // Comparer le code avec les codes des touches flèches
     switch (keyCode) {
       case 37: // Flèche gauche
-        swipeLeft(grid2048, 0)
+        swipeLeft(grid2048, 0, 0)
         break
       case 38: // Flèche haut
-        swipeTop(grid2048, 0)
+        swipeTop(grid2048, 0, 0)
         break
       case 39: // Flèche droite
-        swipeRight(grid2048, 0)
+        swipeRight(grid2048, 0, 0)
         break
       case 40: // Flèche bas
-        swipeBottom(grid2048, 0)
+        swipeBottom(grid2048, 0, 0)
         break
       default:
         break
@@ -531,6 +540,13 @@ export default function Home() {
   return (
     <main className="main-home" tabIndex="0" onKeyDown={handleKeyDown}>
       <div className="game-container">
+        <section className="score-container">
+          <h1>2048</h1>
+          <div className="div-score">
+            <h2>Score</h2>
+            <p>{score}</p>
+          </div>
+        </section>
         <section className="section-2048-container">
           {grid2048.map((cell) => (
             <div className="cell2048" key={"x" + cell.x + " - y" + cell.y}>
