@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.32, for macos13 (arm64)
+-- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
--- Host: localhost    Database: harryBdd
+-- Host: localhost    Database: 2048bdd
 -- ------------------------------------------------------
--- Server version	8.0.32
+-- Server version	8.0.33
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,117 +16,38 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `harryBdd`
+-- Current Database: `2048bdd`
 --
 
-/*!40000 DROP DATABASE IF EXISTS `harryBdd`*/;
+/*!40000 DROP DATABASE IF EXISTS `2048bdd`*/;
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `harryBdd` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `2048bdd` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
-USE `harryBdd`;
+USE `2048bdd`;
 
 --
--- Table structure for table `characters`
+-- Table structure for table `scores`
 --
 
-DROP TABLE IF EXISTS `characters`;
+DROP TABLE IF EXISTS `scores`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `characters` (
+CREATE TABLE `scores` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `firstname` varchar(100) DEFAULT NULL,
-  `lastname` varchar(100) DEFAULT NULL,
-  `imgUrl` varchar(255) DEFAULT NULL,
-  `houses_id` int NOT NULL,
-  PRIMARY KEY (`id`,`houses_id`),
-  KEY `fk_characters_houses_idx` (`houses_id`),
-  CONSTRAINT `fk_characters_houses` FOREIGN KEY (`houses_id`) REFERENCES `houses` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `characters`
---
-
-LOCK TABLES `characters` WRITE;
-/*!40000 ALTER TABLE `characters` DISABLE KEYS */;
-INSERT INTO `characters` VALUES (1,'Harry','Potter','https://static.actu.fr/uploads/2023/01/25512-230106120939397-0.jpg',1),(2,'Hermione','Granger','https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Hermione_Granger_poster.jpg/220px-Hermione_Granger_poster.jpg',1),(3,'Drago','Malefoy','https://wingardium-leviosa.com/wp-content/uploads/2018/03/draco-malfoy-produit-baguette-magique.jpg',2),(5,'Ron','weasley','https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/Ron_Weasley_poster.jpg/220px-Ron_Weasley_poster.jpg',1);
-/*!40000 ALTER TABLE `characters` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `houses`
---
-
-DROP TABLE IF EXISTS `houses`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `houses` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `houseName` varchar(100) DEFAULT NULL,
-  `housePoint` int DEFAULT NULL,
+  `player` varchar(150) NOT NULL,
+  `score` double NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `houses`
+-- Dumping data for table `scores`
 --
 
-LOCK TABLES `houses` WRITE;
-/*!40000 ALTER TABLE `houses` DISABLE KEYS */;
-INSERT INTO `houses` VALUES (1,'Grifondor',100),(2,'Serpentard',100);
-/*!40000 ALTER TABLE `houses` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `spells`
---
-
-DROP TABLE IF EXISTS `spells`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `spells` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `spellName` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `spells`
---
-
-LOCK TABLES `spells` WRITE;
-/*!40000 ALTER TABLE `spells` DISABLE KEYS */;
-/*!40000 ALTER TABLE `spells` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `spells_has_characters`
---
-
-DROP TABLE IF EXISTS `spells_has_characters`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `spells_has_characters` (
-  `spells_id` int NOT NULL,
-  `characters_id` int NOT NULL,
-  PRIMARY KEY (`spells_id`,`characters_id`),
-  KEY `fk_spells_has_characters_characters1_idx` (`characters_id`),
-  KEY `fk_spells_has_characters_spells1_idx` (`spells_id`),
-  CONSTRAINT `fk_spells_has_characters_characters1` FOREIGN KEY (`characters_id`) REFERENCES `characters` (`id`),
-  CONSTRAINT `fk_spells_has_characters_spells1` FOREIGN KEY (`spells_id`) REFERENCES `spells` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `spells_has_characters`
---
-
-LOCK TABLES `spells_has_characters` WRITE;
-/*!40000 ALTER TABLE `spells_has_characters` DISABLE KEYS */;
-/*!40000 ALTER TABLE `spells_has_characters` ENABLE KEYS */;
+LOCK TABLES `scores` WRITE;
+/*!40000 ALTER TABLE `scores` DISABLE KEYS */;
+INSERT INTO `scores` VALUES (1,'anonyme',8),(2,'Anonyme',1612),(3,'Anonyme',1612),(4,'Anonyme',592),(5,'Anonyme',596),(6,'Anonyme',596),(7,'Anonyme',35192),(8,'Anonyme',35196);
+/*!40000 ALTER TABLE `scores` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -138,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-12  2:40:41
+-- Dump completed on 2023-09-26 10:43:54
