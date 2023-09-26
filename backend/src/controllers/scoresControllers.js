@@ -1,25 +1,10 @@
 const models = require("../models")
 
 const browse = (req, res) => {
-  models.characters
-    .findAll()
+  models.scores
+    .findHighScores()
     .then(([rows]) => {
-      res.send(rows)
-    })
-    .catch((err) => {
-      console.error(err)
-      res.sendStatus(500)
-    })
-}
-
-const add = (req, res) => {
-  const characters = req.body
-  // TODO validations (length, format...)
-
-  models.characters
-    .insert(characters)
-    .then(([result]) => {
-      res.json(result.insertId)
+      res.send(rows[0])
     })
     .catch((err) => {
       console.error(err)
@@ -28,7 +13,7 @@ const add = (req, res) => {
 }
 
 const read = (req, res) => {
-  models.characters
+  models.scores
     .find(req.params.id)
     .then(([rows]) => {
       if (rows[0] == null) {
@@ -44,14 +29,14 @@ const read = (req, res) => {
 }
 
 const edit = (req, res) => {
-  const characters = req.body
+  const scores = req.body
 
   // TODO validations (length, format...)
 
-  characters.id = parseInt(req.params.id, 10)
+  scores.id = parseInt(req.params.id, 10)
 
-  models.characters
-    .update(characters)
+  models.scores
+    .update(scores)
     .then(([result]) => {
       if (result.affectedRows === 0) {
         res.sendStatus(404)
@@ -64,8 +49,25 @@ const edit = (req, res) => {
       res.sendStatus(500)
     })
 }
+
+const add = (req, res) => {
+  const scores = req.body.score
+
+  // TODO validations (length, format...)
+
+  models.scores
+    .insert(scores)
+    .then(([result]) => {
+      res.location(`/scoress/${result.insertId}`).sendStatus(201)
+    })
+    .catch((err) => {
+      console.error(err)
+      res.sendStatus(500)
+    })
+}
+
 const destroy = (req, res) => {
-  models.characters
+  models.scores
     .delete(req.params.id)
     .then(([result]) => {
       if (result.affectedRows === 0) {
@@ -82,8 +84,8 @@ const destroy = (req, res) => {
 
 module.exports = {
   browse,
-  add,
   read,
   edit,
+  add,
   destroy,
 }
