@@ -2,9 +2,9 @@ const models = require("../models")
 
 const browse = (req, res) => {
   models.scores
-    .findAll()
+    .findHighScores()
     .then(([rows]) => {
-      res.send(rows)
+      res.send(rows[0])
     })
     .catch((err) => {
       console.error(err)
@@ -51,7 +51,7 @@ const edit = (req, res) => {
 }
 
 const add = (req, res) => {
-  const scores = req.body
+  const scores = req.body.score
 
   // TODO validations (length, format...)
 

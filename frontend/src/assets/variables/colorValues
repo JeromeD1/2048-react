@@ -1,0 +1,69 @@
+const colorValues = [
+    {
+        value: 2,
+        color: "rgb(220,220,220)"
+    },
+    {
+        value: 4,
+        color: "rgb(220,220,160)"
+    },
+    {
+        value: 8,
+        color: "rgb(220,220,50)"
+    },
+    {
+        value: 16,
+        color: "rgb(220,200,50)"
+    },
+    {
+        value: 32,
+        color: "rgb(220,170,50)"
+    },
+    {
+        value: 64,
+        color: "rgb(220,130,50)"
+    },
+    {
+        value: 128,
+        color: "rgb(240,110,50)"
+    },
+    {
+        value: 256,
+        color: "rgb(255,100,0)"
+    },
+    {
+        value: 512,
+        color: "rgb(255,100,200)"
+    },
+    {
+        value: 1024,
+        color: "rgb(255,50,255)"
+    },
+    {
+        value: 2048,
+        color: "rgb(180,50,255)"
+    },
+    {
+        value: 4096,
+        color: "rgb(100,50,255)"
+    },
+    {
+        value: 8192,
+        color: "rgb(50,50,255)"
+    },
+    {
+        value: 16384,
+        color: "rgb(0,50,200)"
+    },
+    {
+        value: 32768,
+        color: "rgb(0,0,100)"
+    },
+    {
+        value: 65536,
+        color: "rgb(0,0,0)"
+    },
+]
+
+
+export {colorValues}

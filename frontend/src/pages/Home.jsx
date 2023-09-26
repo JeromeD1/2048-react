@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react"
-// import axios from "axios"
+import axios from "axios"
 import "./Home.scss"
+import { colorValues } from "../assets/variables/colorValues"
 
 export default function Home() {
   const [grid2048, setGrid2048] = useState([])
   const [score, setScore] = useState(0)
+  const [highScore, setHighScore] = useState(0)
+  const [gameOver, setGameOver] = useState(false)
 
   const createGrid = () => {
     const newgrid = []
@@ -29,10 +32,7 @@ export default function Home() {
     const freePositions = grid.filter((cell) => cell.value === 0)
 
     const randomX = Math.floor(Math.random() * 5)
-    // const randomX = 1
-
     const randomY = Math.floor(Math.random() * 5)
-    // const randomY = 1
 
     if (
       freePositions.find((cell) => cell.x === randomX && cell.y === randomY)
@@ -41,6 +41,69 @@ export default function Home() {
     } else {
       return findFreeRandomPosition(grid)
     }
+  }
+
+  const handleRandom2Or4 = () => {
+    return Math.random() < 0.9 ? 2 : 4
+  }
+
+  const handleGameOver = (myGrid) => {
+    // let nbVide = 0
+    // let sameValueAside = false
+
+    for (let x = 1; x < 5; x++) {
+      for (let y = 1; y < 5; y++) {
+        const activeCell = myGrid.find((cell) => cell.x === x && cell.y === y)
+
+        if (activeCell.value === 0) {
+          // nbVide++
+          return false
+        }
+
+        const cellXm1 = myGrid.find((cell) => cell.x === x - 1 && cell.y === y)
+        const cellXp1 = myGrid.find((cell) => cell.x === x + 1 && cell.y === y)
+        const cellYm1 = myGrid.find((cell) => cell.x === x && cell.y === y - 1)
+        const cellYp1 = myGrid.find((cell) => cell.x === x && cell.y === y + 1)
+
+        if (cellXm1 !== undefined) {
+          if (cellXm1.value === activeCell.value) {
+            return false
+          }
+        }
+
+        if (cellXp1 !== undefined) {
+          if (cellXp1.value === activeCell.value) {
+            return false
+          }
+        }
+
+        if (cellYm1 !== undefined) {
+          if (cellYm1.value === activeCell.value) {
+            return false
+          }
+        }
+
+        if (cellYp1 !== undefined) {
+          if (cellYp1.value === activeCell.value) {
+            return false
+          }
+        }
+      }
+    }
+
+    setGameOver(true)
+
+    axios
+      .post("http://localhost:4242/scores", {
+        score,
+      })
+      .then(() => {
+        axios
+          .get("http://localhost:4242/scores")
+          .then(({ data }) => setHighScore(data.score))
+      })
+
+    return true
   }
 
   const swipeLeft = (myGrid, count, newScore) => {
@@ -141,15 +204,18 @@ export default function Home() {
         // on rajoute le nouveau chiffre à la grille
         newGrid = newGrid.map((cell) =>
           cell.x === newPosition.randomX && cell.y === newPosition.randomY
-            ? { ...cell, value: 2 }
+            ? { ...cell, value: handleRandom2Or4() }
             : cell
         )
         // on rend de nouveau toutes les cases mergeables
         newGrid = newGrid.map((item) => ({ ...item, mergeable: true }))
       }
     } else {
+      handleGameOver(newGrid)
       return swipeLeft(newGrid, count + 1, newScore)
     }
+
+    handleGameOver(newGrid)
 
     setGrid2048(newGrid)
 
@@ -256,16 +322,18 @@ export default function Home() {
         // on rajoute le nouveau chiffre à la grille
         newGrid = newGrid.map((cell) =>
           cell.x === newPosition.randomX && cell.y === newPosition.randomY
-            ? { ...cell, value: 2 }
+            ? { ...cell, value: handleRandom2Or4() }
             : cell
         )
         // on rend de nouveau toutes les cases mergeables
         newGrid = newGrid.map((item) => ({ ...item, mergeable: true }))
       }
     } else {
+      handleGameOver(newGrid)
       return swipeTop(newGrid, count + 1, newScore)
     }
 
+    handleGameOver(newGrid)
     setGrid2048(newGrid)
     setScore(score + newScore)
   }
@@ -369,16 +437,18 @@ export default function Home() {
         // on rajoute le nouveau chiffre à la grille
         newGrid = newGrid.map((cell) =>
           cell.x === newPosition.randomX && cell.y === newPosition.randomY
-            ? { ...cell, value: 2 }
+            ? { ...cell, value: handleRandom2Or4() }
             : cell
         )
         // on rend de nouveau toutes les cases mergeables
         newGrid = newGrid.map((item) => ({ ...item, mergeable: true }))
       }
     } else {
+      handleGameOver(newGrid)
       return swipeRight(newGrid, count + 1, newScore)
     }
 
+    handleGameOver(newGrid)
     setGrid2048(newGrid)
     setScore(score + newScore)
   }
@@ -482,16 +552,18 @@ export default function Home() {
         // on rajoute le nouveau chiffre à la grille
         newGrid = newGrid.map((cell) =>
           cell.x === newPosition.randomX && cell.y === newPosition.randomY
-            ? { ...cell, value: 2 }
+            ? { ...cell, value: handleRandom2Or4() }
             : cell
         )
         // on rend de nouveau toutes les cases mergeables
         newGrid = newGrid.map((item) => ({ ...item, mergeable: true }))
       }
     } else {
+      handleGameOver(newGrid)
       return swipeBottom(newGrid, count + 1, newScore)
     }
 
+    handleGameOver(newGrid)
     setGrid2048(newGrid)
     setScore(score + newScore)
   }
@@ -520,7 +592,10 @@ export default function Home() {
     }
   }
 
-  useEffect(() => {
+  const handleRestart = () => {
+    setScore(0)
+    setGameOver(false)
+
     let newGrid = createGrid()
     const firstPosition = findFreeRandomPosition(newGrid)
     newGrid = newGrid.map((cell) =>
@@ -535,28 +610,79 @@ export default function Home() {
         : cell
     )
     setGrid2048(newGrid)
+  }
+
+  useEffect(() => {
+    handleRestart()
+
+    axios
+      .get("http://localhost:4242/scores")
+      .then(({ data }) => setHighScore(data.score))
   }, [])
 
   return (
     <main className="main-home" tabIndex="0" onKeyDown={handleKeyDown}>
       <div className="game-container">
         <section className="score-container">
-          <h1>2048</h1>
+          <h1
+            title="Restart"
+            onClick={handleRestart}
+            style={
+              grid2048[0]
+                ? {
+                    color: colorValues.find(
+                      (color) =>
+                        color.value ===
+                        Math.max(...grid2048.map((cell) => cell.value))
+                    ).color,
+                  }
+                : null
+            }
+          >
+            2048
+          </h1>
           <div className="div-score">
             <h2>Score</h2>
             <p>{score}</p>
           </div>
+          <div className="div-score">
+            <h2>High score</h2>
+            <p>{highScore || 0}</p>
+          </div>
         </section>
         <section className="section-2048-container">
           {grid2048.map((cell) => (
-            <div className="cell2048" key={"x" + cell.x + " - y" + cell.y}>
+            <div
+              className="cell2048"
+              style={
+                cell.value !== 0
+                  ? {
+                      backgroundColor: colorValues.find(
+                        (color) => color.value === cell.value
+                      ).color,
+                    }
+                  : null
+              }
+              key={"x" + cell.x + " - y" + cell.y}
+            >
               {
-                <p>{cell.value !== 0 ? cell.value : null}</p>
+                <p
+                  style={
+                    cell.value < 1000
+                      ? { fontSize: "3rem" }
+                      : cell.value < 10000
+                      ? { fontSize: "2.3rem" }
+                      : { fontSize: "1.7rem" }
+                  }
+                >
+                  {cell.value !== 0 ? cell.value : null}
+                </p>
                 // <p>{"x" + cell.x + " - y"  + cell.y + "val" + cell.value + "  " + cell.mergeable} </p>
               }
             </div>
           ))}
         </section>
+        {gameOver && <h1 className="gameover">Game Over</h1>}
       </div>
     </main>
   )
